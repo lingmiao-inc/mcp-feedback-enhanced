@@ -1,0 +1,164 @@
+<!-- 快捷指令HTML结构片段 -->
+<!-- 这个文件包含了快捷指令功能所需的完整HTML结构 -->
+
+<!-- 1. 快捷指令区域标题 -->
+<div class="feedback-title-container">
+    <h3 class="combined-section-title" data-i18n="shortcuts.title">💬 快捷指令</h3>
+    <button id="submitBtn" class="btn btn-success combined-submit-btn" data-i18n="buttons.submit">
+        ✅ 提交回饋
+    </button>
+</div>
+
+<!-- 2. 快捷指令容器 - 主要容器 -->
+<div class="shortcuts-container" id="shortcutsContainer">
+    <!-- 快捷指令标签页容器 -->
+    <div class="shortcuts-tabs" id="shortcutTabsContainer" role="tablist">
+        <!-- 标签页将由JavaScript动态生成 -->
+        <!-- 示例结构：
+        <button class="shortcuts-tab active" 
+                data-group-index="0"
+                role="tab"
+                aria-selected="true"
+                aria-controls="shortcut-panel-0">
+            快捷回复
+        </button>
+        <button class="shortcuts-tab" 
+                data-group-index="1"
+                role="tab"
+                aria-selected="false"
+                aria-controls="shortcut-panel-1">
+            其他分组
+        </button>
+        -->
+    </div>
+
+    <!-- 快捷指令内容面板容器 -->
+    <div class="shortcuts-panels" id="shortcutPanelsContainer">
+        <!-- 内容面板将由JavaScript动态生成 -->
+        <!-- 示例结构：
+        <div class="shortcuts-panel active"
+             id="shortcut-panel-0"
+             data-theme="blue"
+             role="tabpanel"
+             aria-labelledby="shortcut-tab-0">
+            <button class="shortcut-button"
+                    data-shortcut-id="agree"
+                    data-prompt="- 我同意你的计划。"
+                    title="- 我同意你的计划。"
+                    type="button">
+                同意
+            </button>
+            <button class="shortcut-button"
+                    data-shortcut-id="disagree"
+                    data-prompt="- 我不同意这个方案。"
+                    title="- 我不同意这个方案。"
+                    type="button">
+                不同意
+            </button>
+        </div>
+        -->
+    </div>
+</div>
+
+<!-- 3. 输入框区域（快捷指令插入的目标） -->
+<div class="input-group">
+    <label class="input-label" data-i18n="feedback.textLabel">文字回饋</label>
+
+    <!-- 提示词按钮（包含清空按钮） -->
+    <div class="prompt-input-buttons" id="combinedPromptButtons">
+        <button type="button" class="prompt-input-btn select-prompt-btn" data-container-index="1">
+            <span>📝</span>
+            <span class="button-text" data-i18n="prompts.buttons.selectPrompt">Templates</span>
+        </button>
+        <button type="button" class="prompt-input-btn last-prompt-btn" data-container-index="1">
+            <span>🔄</span>
+            <span class="button-text" data-i18n="prompts.buttons.useLastPrompt">Last Used</span>
+        </button>
+        <button type="button" class="prompt-input-btn clear-input-btn" id="clearInputBtn">
+            <span>🧹</span>
+            <span class="button-text" data-i18n="prompts.buttons.clearInput">Clear Input</span>
+        </button>
+    </div>
+
+    <!-- 主要输入框 -->
+    <textarea
+        id="combinedFeedbackText"
+        class="text-input"
+        data-i18n-placeholder="feedback.placeholder"
+        placeholder="請輸入您的回饋..."
+        rows="6"
+        style="resize: vertical; min-height: 120px;">
+    </textarea>
+
+    <!-- 输入框下方的其他按钮 -->
+    <div class="prompt-input-buttons" id="combinedPromptButtons" style="margin-top: 8px;">
+        <button type="button" class="prompt-input-btn select-prompt-btn" data-container-index="1">
+            <span>📝</span>
+            <span class="button-text" data-i18n="prompts.buttons.selectPrompt">Templates</span>
+        </button>
+        <button type="button" class="prompt-input-btn last-prompt-btn" data-container-index="1">
+            <span>🔄</span>
+            <span class="button-text" data-i18n="prompts.buttons.useLastPrompt">Last Used</span>
+        </button>
+        <button type="button" class="prompt-input-btn copy-user-content-btn" id="copyUserFeedback">
+            <span>📋</span>
+            <span class="button-text" data-i18n="sessionManagement.copyUserContent">複製用戶內容</span>
+        </button>
+    </div>
+</div>
+
+<!-- 4. 必需的CSS文件引用 -->
+<!-- 在HTML头部添加以下CSS引用 -->
+<!--
+<link rel="stylesheet" href="/static/css/shortcuts.css?v=2025061902">
+-->
+
+<!-- 5. 必需的JavaScript文件引用 -->
+<!-- 在HTML底部添加以下JavaScript引用 -->
+<!--
+<script src="/static/js/modules/shortcut-manager.js?v=2025061902"></script>
+<script src="/static/js/modules/shortcut-ui.js?v=2025061902"></script>
+-->
+
+<!-- 6. 状态显示示例 -->
+<!-- 加载状态 -->
+<!--
+<div class="shortcuts-loading">
+    <div class="loading-spinner"></div>
+    <span>载入快捷指令中...</span>
+</div>
+-->
+
+<!-- 错误状态 -->
+<!--
+<div class="shortcuts-error">
+    <span>❌</span>
+    <span>快捷指令载入失败: 网络错误</span>
+</div>
+-->
+
+<!-- 空状态 -->
+<!--
+<div class="shortcuts-empty">
+    <span>暂无快捷指令</span>
+</div>
+-->
+
+<!-- 
+使用说明：
+1. 将上述HTML结构复制到你的模板文件中
+2. 确保包含必要的CSS和JavaScript文件
+3. 根据需要调整容器ID和类名
+4. 确保输入框的ID与JavaScript中的选择器匹配
+5. 添加适当的国际化翻译键
+-->
+
+<!-- 
+重要注意事项：
+- shortcutsContainer: 主容器ID，JavaScript会查找这个元素
+- shortcutTabsContainer: 标签页容器ID
+- shortcutPanelsContainer: 面板容器ID  
+- combinedFeedbackText: 输入框ID，快捷指令会插入到这里
+- 所有data-i18n属性用于国际化翻译
+- role和aria-*属性用于无障碍支持
+-->

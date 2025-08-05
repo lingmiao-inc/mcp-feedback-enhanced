@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/static/css/prompt-management.css">
     <link rel="stylesheet" href="/static/css/audio-management.css">
     <link rel="stylesheet" href="/static/css/notification-settings.css">
+    <link rel="stylesheet" href="/static/css/shortcuts.css?v=2025010510">
     <style>
         /* 僅保留必要的頁面特定樣式和響應式調整 */
 
@@ -611,10 +612,23 @@
                     <!-- 回饋輸入區域 -->
                     <div class="combined-section">
                         <div class="feedback-title-container">
-                            <h3 class="combined-section-title" data-i18n="combined.feedbackTitle">💬 提供回饋</h3>
+                            <h3 class="combined-section-title" data-i18n="shortcuts.title">💬 快捷指令</h3>
                             <button id="submitBtn" class="btn btn-success combined-submit-btn" data-i18n="buttons.submit">
                                 ✅ 提交回饋
                             </button>
+                        </div>
+
+                        <!-- 快捷指令容器 -->
+                        <div class="shortcuts-container" id="shortcutsContainer">
+                            <!-- 快捷指令標籤頁容器 -->
+                            <div class="shortcuts-tabs" id="shortcutTabsContainer" role="tablist">
+                                <!-- 標籤頁將由JavaScript動態生成 -->
+                            </div>
+
+                            <!-- 快捷指令內容面板容器 -->
+                            <div class="shortcuts-panels" id="shortcutPanelsContainer">
+                                <!-- 內容面板將由JavaScript動態生成 -->
+                            </div>
                         </div>
 
                         <div class="input-group">
@@ -1199,6 +1213,10 @@
     <!-- 通知模組 -->
     <script src="/static/js/modules/notification/notification-manager.js?v=2025010510"></script>
     <script src="/static/js/modules/notification/notification-settings.js?v=2025010510"></script>
+
+    <!-- 快捷指令模組 -->
+    <script src="/static/js/modules/shortcut-manager.js?v=2025010510"></script>
+    <script src="/static/js/modules/shortcut-ui.js?v=2025010510"></script>
 
     <!-- 其他模組 -->
     <script src="/static/js/modules/utils.js?v=2025010510"></script>

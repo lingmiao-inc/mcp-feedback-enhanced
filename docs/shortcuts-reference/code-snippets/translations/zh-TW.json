@@ -1,0 +1,30 @@
+{
+    "shortcuts": {
+        "title": "💬 快捷指令",
+        "loading": "載入快捷指令中...",
+        "loadError": "快捷指令載入失敗",
+        "empty": "暫無快捷指令",
+        "insertSuccess": "已插入快捷指令",
+        "networkError": "網路連線失敗，請檢查網路設定",
+        "serverError": "伺服器錯誤，請稍後重試",
+        "parseError": "資料解析失敗，請聯絡管理員"
+    },
+    "prompts": {
+        "buttons": {
+            "selectPrompt": "Templates",
+            "useLastPrompt": "Last Used",
+            "clearInput": "Clear Input"
+        }
+    },
+    "buttons": {
+        "submit": "✅ 提交回饋"
+    },
+    "feedback": {
+        "textLabel": "文字回饋",
+        "placeholder": "請輸入您的回饋..."
+    },
+    "combined": {
+        "summaryTitle": "📋 AI 工作摘要",
+        "feedbackTitle": "💬 提供回饋"
+    }
+}
