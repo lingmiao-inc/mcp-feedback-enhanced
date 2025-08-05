@@ -1,0 +1,30 @@
+{
+    "shortcuts": {
+        "title": "💬 快捷指令",
+        "loading": "载入快捷指令中...",
+        "loadError": "快捷指令载入失败",
+        "empty": "暂无快捷指令",
+        "insertSuccess": "已插入快捷指令",
+        "networkError": "网络连接失败，请检查网络设置",
+        "serverError": "服务器错误，请稍后重试",
+        "parseError": "数据解析失败，请联系管理员"
+    },
+    "prompts": {
+        "buttons": {
+            "selectPrompt": "Templates",
+            "useLastPrompt": "Last Used",
+            "clearInput": "Clear Input"
+        }
+    },
+    "buttons": {
+        "submit": "✅ 提交反馈"
+    },
+    "feedback": {
+        "textLabel": "文字反馈",
+        "placeholder": "请输入您的反馈..."
+    },
+    "combined": {
+        "summaryTitle": "📋 AI 工作摘要",
+        "feedbackTitle": "💬 提供反馈"
+    }
+}

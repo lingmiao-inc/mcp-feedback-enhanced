@@ -1,0 +1,30 @@
+{
+    "shortcuts": {
+        "title": "💬 Quick Commands",
+        "loading": "Loading quick commands...",
+        "loadError": "Failed to load quick commands",
+        "empty": "No quick commands available",
+        "insertSuccess": "Quick command inserted",
+        "networkError": "Network connection failed, please check network settings",
+        "serverError": "Server error, please try again later",
+        "parseError": "Data parsing failed, please contact administrator"
+    },
+    "prompts": {
+        "buttons": {
+            "selectPrompt": "Templates",
+            "useLastPrompt": "Last Used",
+            "clearInput": "Clear Input"
+        }
+    },
+    "buttons": {
+        "submit": "✅ Submit Feedback"
+    },
+    "feedback": {
+        "textLabel": "Text Feedback",
+        "placeholder": "Please enter your feedback..."
+    },
+    "combined": {
+        "summaryTitle": "📋 AI Work Summary",
+        "feedbackTitle": "💬 Provide Feedback"
+    }
+}
