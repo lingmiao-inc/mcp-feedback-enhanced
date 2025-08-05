@@ -1,0 +1,298 @@
+/**
+ * MCP Feedback Enhanced - 快捷指令樣式
+ * ====================================
+ * 
+ * 快捷指令TABBAR和按鈕的樣式定義
+ */
+
+/* ===== 快捷指令容器 ===== */
+
+.shortcuts-container {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+/* ===== 快捷指令標籤頁 ===== */
+
+.shortcuts-tabs {
+    display: flex;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+
+.shortcuts-tabs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.shortcuts-tabs::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.shortcuts-tabs::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 2px;
+}
+
+.shortcuts-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: fit-content;
+}
+
+.shortcuts-tab:hover:not(.active) {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.shortcuts-tab.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+    background: var(--bg-secondary);
+}
+
+/* ===== 快捷指令面板 ===== */
+
+.shortcuts-panels {
+    position: relative;
+    min-height: 80px;
+}
+
+.shortcuts-panel {
+    display: none;
+    padding: 16px;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.shortcuts-panel.active {
+    display: flex;
+}
+
+/* ===== 快捷指令按鈕 ===== */
+
+.shortcut-button {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 400;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.shortcut-button:hover {
+    background: var(--surface-color);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: translateY(-1px);
+}
+
+.shortcut-button:active {
+    transform: translateY(0);
+}
+
+/* ===== 主題顏色 ===== */
+
+/* 藍色主題 */
+.shortcuts-panel[data-theme="blue"] .shortcut-button:hover {
+    border-color: #007acc;
+    color: #007acc;
+}
+
+/* 綠色主題 */
+.shortcuts-panel[data-theme="green"] .shortcut-button:hover {
+    border-color: #4caf50;
+    color: #4caf50;
+}
+
+/* 橙色主題 */
+.shortcuts-panel[data-theme="orange"] .shortcut-button:hover {
+    border-color: #ff9800;
+    color: #ff9800;
+}
+
+/* 紫色主題 */
+.shortcuts-panel[data-theme="purple"] .shortcut-button:hover {
+    border-color: #9c27b0;
+    color: #9c27b0;
+}
+
+/* 紅色主題 */
+.shortcuts-panel[data-theme="red"] .shortcut-button:hover {
+    border-color: #f44336;
+    color: #f44336;
+}
+
+/* 靛藍主題 */
+.shortcuts-panel[data-theme="indigo"] .shortcut-button:hover {
+    border-color: #3f51b5;
+    color: #3f51b5;
+}
+
+/* ===== 狀態樣式 ===== */
+
+/* 載入狀態 */
+.shortcuts-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    gap: 12px;
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 錯誤狀態 */
+.shortcuts-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    color: var(--error-color);
+    font-size: 14px;
+    gap: 8px;
+    text-align: center;
+}
+
+/* 空狀態 */
+.shortcuts-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* ===== 響應式設計 ===== */
+
+@media (max-width: 768px) {
+    .shortcuts-tab {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+    
+    .shortcuts-panel {
+        padding: 12px;
+        gap: 6px;
+    }
+    
+    .shortcut-button {
+        padding: 5px 10px;
+        font-size: 11px;
+        max-width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .shortcuts-tabs {
+        padding: 0 4px;
+    }
+    
+    .shortcuts-tab {
+        padding: 8px 10px;
+        font-size: 11px;
+        min-width: auto;
+    }
+    
+    .shortcuts-panel {
+        padding: 10px;
+        gap: 4px;
+    }
+    
+    .shortcut-button {
+        padding: 4px 8px;
+        font-size: 10px;
+        max-width: 120px;
+    }
+    
+    .shortcuts-loading,
+    .shortcuts-error,
+    .shortcuts-empty {
+        padding: 24px 12px;
+        font-size: 13px;
+    }
+}
+
+/* ===== 無障礙支持 ===== */
+
+.shortcuts-tab:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: -2px;
+}
+
+.shortcut-button:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* 高對比度模式支持 */
+@media (prefers-contrast: high) {
+    .shortcuts-tab {
+        border: 1px solid var(--border-color);
+    }
+    
+    .shortcuts-tab.active {
+        border-color: var(--accent-color);
+        background: var(--accent-color);
+        color: var(--bg-primary);
+    }
+    
+    .shortcut-button {
+        border-width: 2px;
+    }
+}
+
+/* 減少動畫偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+    .shortcuts-tab,
+    .shortcut-button {
+        transition: none;
+    }
+    
+    .shortcut-button:hover {
+        transform: none;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+}

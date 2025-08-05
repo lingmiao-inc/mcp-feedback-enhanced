@@ -113,6 +113,14 @@
         "summaryTitle": "📋 AI Work Summary",
         "feedbackTitle": "💬 Provide Feedback"
     },
+    "shortcuts": {
+        "title": "💬 Quick Commands",
+        "loading": "Loading shortcuts...",
+        "loadError": "Failed to load shortcuts",
+        "empty": "No shortcuts available",
+        "insertSuccess": "Shortcut inserted",
+        "insertError": "Failed to insert shortcut"
+    },
     "settingsUI": {
         "title": "⚙️ Settings",
         "language": "🌍 Language",

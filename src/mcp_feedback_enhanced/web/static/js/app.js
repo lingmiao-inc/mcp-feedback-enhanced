@@ -46,6 +46,10 @@
         this.notificationManager = null;
         this.notificationSettings = null;
 
+        // 快捷指令管理器
+        this.shortcutManager = null;
+        this.shortcutUI = null;
+
         // 自動提交管理器
         this.autoSubmitManager = null;
 
@@ -246,32 +250,35 @@
                         // 11. 初始化通知管理器
                         self.initializeNotificationManager();
 
-                        // 12. 初始化自動提交管理器
+                        // 12. 初始化快捷指令管理器
+                        self.initializeShortcutManagers();
+
+                        // 13. 初始化自動提交管理器
                         self.initializeAutoSubmitManager();
 
-                        // 13. 初始化 Textarea 高度管理器
+                        // 14. 初始化 Textarea 高度管理器
                         self.initializeTextareaHeightManager();
 
-                        // 14. 應用設定到 UI
+                        // 15. 應用設定到 UI
                         self.settingsManager.applyToUI();
 
-                        // 15. 初始化各個管理器
+                        // 16. 初始化各個管理器
                         self.uiManager.initTabs();
                         self.imageHandler.init();
 
-                        // 16. 檢查並啟動自動提交（如果條件滿足）
+                        // 17. 檢查並啟動自動提交（如果條件滿足）
                         setTimeout(function() {
                             self.checkAndStartAutoSubmit();
                         }, 500); // 延遲 500ms 確保所有初始化完成
 
-                        // 17. 播放啟動音效（如果音效已啟用）
+                        // 18. 播放啟動音效（如果音效已啟用）
                         setTimeout(function() {
                             if (self.audioManager) {
                                 self.audioManager.playStartupNotification();
                             }
                         }, 800); // 延遲 800ms 確保所有初始化完成且避免與其他音效衝突
 
-                        // 17. 初始化會話超時設定
+                        // 19. 初始化會話超時設定
                         if (self.settingsManager.get('sessionTimeoutEnabled')) {
                             const timeoutSettings = {
                                 enabled: self.settingsManager.get('sessionTimeoutEnabled'),
@@ -600,6 +607,90 @@
 
         } catch (error) {
             console.error('❌ 通知管理器初始化失敗:', error);
+        }
+    };
+
+    /**
+     * 初始化快捷指令管理器
+     */
+    FeedbackApp.prototype.initializeShortcutManagers = function() {
+        console.log('⚡ 初始化快捷指令管理器...');
+
+        try {
+            // 檢查快捷指令模組是否已載入
+            if (!window.MCPFeedback.Shortcut) {
+                console.warn('⚠️ 快捷指令模組未載入，跳過初始化');
+                return;
+            }
+
+            if (!window.MCPFeedback.Shortcut.ShortcutManager || !window.MCPFeedback.Shortcut.ShortcutUI) {
+                console.error('❌ 快捷指令子模組未完全載入');
+                console.log('Shortcut 命名空間內容:', Object.keys(window.MCPFeedback.Shortcut));
+                return;
+            }
+
+            const self = this;
+
+            // 1. 初始化快捷指令管理器
+            console.log('📋 創建 ShortcutManager...');
+            this.shortcutManager = new window.MCPFeedback.Shortcut.ShortcutManager({
+                enableCache: true,
+                cacheTimeout: 300000 // 5分鐘緩存
+            });
+            this.shortcutManager.init();
+            console.log('✅ ShortcutManager 創建成功');
+
+            // 2. 初始化快捷指令UI
+            console.log('🎨 創建 ShortcutUI...');
+            this.shortcutUI = new window.MCPFeedback.Shortcut.ShortcutUI({
+                feedbackInputSelector: '#combinedFeedbackText'
+            });
+
+            // 檢查容器是否存在
+            const container = document.querySelector('#shortcutsContainer');
+            console.log('🔍 快捷指令容器檢查:', container ? '找到' : '未找到');
+            if (container) {
+                console.log('容器內容:', container.innerHTML.substring(0, 200));
+            }
+
+            if (!this.shortcutUI.init('#shortcutsContainer')) {
+                console.error('❌ 快捷指令UI初始化失敗');
+                return;
+            }
+            console.log('✅ ShortcutUI 創建成功');
+
+            // 3. 設置回調函數
+            this.shortcutManager.addLoadStartCallback(function() {
+                console.log('⚡ 快捷指令載入開始');
+                self.shortcutUI.showLoading();
+            });
+
+            this.shortcutManager.addLoadSuccessCallback(function(data) {
+                console.log('⚡ 快捷指令載入成功:', data.groups.length, '個分組');
+                console.log('分組詳情:', data.groups.map(g => g.name + '(' + g.shortcuts.length + ')'));
+                self.shortcutUI.render(data.groups);
+            });
+
+            this.shortcutManager.addLoadErrorCallback(function(error) {
+                console.error('⚡ 快捷指令載入失敗:', error);
+                self.shortcutUI.showError(error.message || '載入失敗');
+            });
+
+            // 4. 開始加載快捷指令數據
+            console.log('🔄 開始載入快捷指令數據...');
+            this.shortcutManager.loadShortcuts()
+                .then(function(data) {
+                    console.log('✅ 快捷指令初始化完成，數據:', data);
+                })
+                .catch(function(error) {
+                    console.warn('⚠️ 快捷指令載入失敗，但不影響其他功能:', error);
+                });
+
+            console.log('✅ 快捷指令管理器初始化完成');
+
+        } catch (error) {
+            console.error('❌ 快捷指令管理器初始化失敗:', error);
+            console.error('錯誤堆棧:', error.stack);
         }
     };
 

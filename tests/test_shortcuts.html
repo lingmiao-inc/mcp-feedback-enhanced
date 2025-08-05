@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快捷指令功能测试</title>
+    <style>
+        :root {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #2d2d30;
+            --bg-tertiary: #252526;
+            --surface-color: #333333;
+            --text-primary: #cccccc;
+            --text-secondary: #9e9e9e;
+            --accent-color: #007acc;
+            --accent-hover: #005a9e;
+            --border-color: #464647;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --info-color: #2196f3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .test-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h2 {
+            color: var(--text-primary);
+            margin-top: 0;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .status.success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+        }
+
+        .status.error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error-color);
+            color: var(--error-color);
+        }
+
+        .status.info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid var(--info-color);
+            color: var(--info-color);
+        }
+    </style>
+    <link rel="stylesheet" href="src/mcp_feedback_enhanced/web/static/css/shortcuts.css">
+</head>
+<body>
+    <div class="container">
+        <h1>快捷指令功能测试</h1>
+        
+        <div class="test-section">
+            <h2>快捷指令区域</h2>
+            <div class="shortcuts-container" id="shortcutsContainer">
+                <div class="shortcuts-tabs" id="shortcutTabsContainer" role="tablist">
+                    <!-- 标签页将由JavaScript动态生成 -->
+                </div>
+                <div class="shortcuts-panels" id="shortcutPanelsContainer">
+                    <!-- 内容面板将由JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>输入框测试</h2>
+            <textarea id="combinedFeedbackText" placeholder="快捷指令将插入到这里..."></textarea>
+            <div id="status" class="status info">等待快捷指令模块加载...</div>
+        </div>
+    </div>
+
+    <!-- 模拟必要的全局对象 -->
+    <script>
+        // 模拟 MCPFeedback 命名空间
+        window.MCPFeedback = {
+            Utils: {
+                safeQuerySelector: function(selector) {
+                    return document.querySelector(selector);
+                },
+                escapeHtml: function(text) {
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                }
+            }
+        };
+
+        // 模拟 i18n 管理器
+        window.i18nManager = {
+            t: function(key, defaultValue) {
+                const translations = {
+                    'shortcuts.loading': '载入快捷指令中...',
+                    'shortcuts.loadError': '快捷指令载入失败',
+                    'shortcuts.empty': '暂无快捷指令'
+                };
+                return translations[key] || defaultValue || key;
+            }
+        };
+
+        // 状态更新函数
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+    </script>
+
+    <!-- 加载快捷指令模块 -->
+    <script src="src/mcp_feedback_enhanced/web/static/js/modules/shortcut-manager.js"></script>
+    <script src="src/mcp_feedback_enhanced/web/static/js/modules/shortcut-ui.js"></script>
+
+    <script>
+        // 测试快捷指令功能
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus('正在初始化快捷指令功能...', 'info');
+
+            try {
+                // 检查模块是否加载
+                if (!window.MCPFeedback.Shortcut || !window.MCPFeedback.Shortcut.ShortcutManager || !window.MCPFeedback.Shortcut.ShortcutUI) {
+                    updateStatus('快捷指令模块未正确加载', 'error');
+                    return;
+                }
+
+                // 创建管理器
+                const shortcutManager = new window.MCPFeedback.Shortcut.ShortcutManager({
+                    enableCache: true,
+                    cacheTimeout: 300000
+                });
+                shortcutManager.init();
+
+                // 创建UI
+                const shortcutUI = new window.MCPFeedback.Shortcut.ShortcutUI({
+                    feedbackInputSelector: '#combinedFeedbackText'
+                });
+
+                if (!shortcutUI.init('#shortcutsContainer')) {
+                    updateStatus('快捷指令UI初始化失败', 'error');
+                    return;
+                }
+
+                // 设置回调
+                shortcutManager.addLoadStartCallback(function() {
+                    updateStatus('正在加载快捷指令数据...', 'info');
+                    shortcutUI.showLoading();
+                });
+
+                shortcutManager.addLoadSuccessCallback(function(data) {
+                    updateStatus(`快捷指令加载成功！共 ${data.groups.length} 个分组`, 'success');
+                    shortcutUI.render(data.groups);
+                });
+
+                shortcutManager.addLoadErrorCallback(function(error) {
+                    updateStatus(`快捷指令加载失败: ${error.message}`, 'error');
+                    shortcutUI.showError(error.message || '加载失败');
+                });
+
+                // 开始加载数据
+                shortcutManager.loadShortcuts()
+                    .then(function(data) {
+                        console.log('✅ 快捷指令测试完成');
+                    })
+                    .catch(function(error) {
+                        console.warn('⚠️ 快捷指令加载失败:', error);
+                    });
+
+                updateStatus('快捷指令功能初始化完成，正在加载数据...', 'success');
+
+            } catch (error) {
+                updateStatus(`初始化失败: ${error.message}`, 'error');
+                console.error('快捷指令测试失败:', error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 [project]
 name = "mcp-feedback-enhanced"
-version = "2.6.0"
+version = "2.6.1"
 description = "Enhanced MCP server for interactive user feedback and command execution in AI-assisted development, featuring dual interface support (Web UI and Desktop Application) with intelligent environment detection and cross-platform compatibility."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -78,6 +78,7 @@ dev-dependencies = [
     "maturin>=1.8.7",
     "setuptools-rust>=1.11.1",
     "pillow>=11.2.1",
+    "bump-my-version>=1.2.1",
 ]
 
 # ===== Ruff 配置 =====
