@@ -353,6 +353,13 @@
     color: var(--text-primary);
 }
 
+/* 清空按鈕特殊樣式 */
+.prompt-input-btn.clear-input-btn:hover {
+    border-color: var(--warning-color, #ff9800);
+    background: rgba(255, 152, 0, 0.1);
+    color: var(--warning-color, #ff9800);
+}
+
 /* ===== 響應式設計 ===== */
 
 @media (max-width: 768px) {

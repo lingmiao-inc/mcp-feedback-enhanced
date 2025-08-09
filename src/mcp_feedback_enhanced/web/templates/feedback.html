@@ -660,6 +660,10 @@
                                     <span>📋</span>
                                     <span class="button-text" data-i18n="sessionManagement.copyUserContent">複製用戶內容</span>
                                 </button>
+                                <button type="button" class="prompt-input-btn clear-input-btn" id="clearUserFeedback" onclick="console.log('🧹 按鈕直接點擊測試'); if(window.feedbackApp) { window.feedbackApp.clearUserFeedback(); } else { console.error('❌ feedbackApp 未找到'); }">
+                                    <span>🧹</span>
+                                    <span class="button-text" data-i18n="sessionManagement.clearUserContent">清空文字</span>
+                                </button>
                             </div>
                         </div>
 

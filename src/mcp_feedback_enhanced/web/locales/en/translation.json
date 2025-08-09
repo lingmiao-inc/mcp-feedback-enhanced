@@ -51,6 +51,8 @@
         "noContent": "No content to copy",
         "copySuccess": "Content copied to clipboard",
         "copyFailed": "Failed to copy",
+        "noContentToClear": "No content to clear",
+        "clearSuccess": "Text cleared",
         "provideTextOrImage": "Please provide feedback text or upload an image"
     },
     "summary": {
@@ -276,6 +278,7 @@
         },
         "copySessionContent": "Copy Session Content",
         "copyUserContent": "Copy User Content",
+        "clearUserContent": "Clear Text",
         "exportSession": "Export This Session"
     },
     "sessionHistory": {

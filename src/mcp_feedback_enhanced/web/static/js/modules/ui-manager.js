@@ -218,6 +218,7 @@
         this.updateSubmitButton();
         this.updateFeedbackInputs();
         this.updateImageUploadAreas();
+        this.updateActionButtons();
     };
 
     /**
@@ -281,6 +282,33 @@
                 area.classList.add('disabled');
             }
         });
+    };
+
+    /**
+     * 更新操作按鈕狀態
+     */
+    UIManager.prototype.updateActionButtons = function() {
+        const copyButton = Utils.safeQuerySelector('#copyUserFeedback');
+        const clearButton = Utils.safeQuerySelector('#clearUserFeedback');
+        const canInteract = this.feedbackState === Utils.CONSTANTS.FEEDBACK_WAITING;
+
+        console.log('🔄 更新操作按鈕狀態 - canInteract:', canInteract, 'feedbackState:', this.feedbackState);
+
+        // 更新複製按鈕狀態
+        if (copyButton) {
+            copyButton.disabled = !canInteract;
+            console.log('📋 複製按鈕狀態:', copyButton.disabled ? '禁用' : '啟用');
+        } else {
+            console.warn('⚠️ 找不到複製按鈕 #copyUserFeedback');
+        }
+
+        // 更新清空按鈕狀態
+        if (clearButton) {
+            clearButton.disabled = !canInteract;
+            console.log('🧹 清空按鈕狀態:', clearButton.disabled ? '禁用' : '啟用');
+        } else {
+            console.warn('⚠️ 找不到清空按鈕 #clearUserFeedback');
+        }
     };
 
     /**

@@ -346,6 +346,20 @@
                 });
             }
 
+            // 清空用戶內容按鈕
+            const clearUserFeedback = window.MCPFeedback.Utils.safeQuerySelector('#clearUserFeedback');
+            if (clearUserFeedback) {
+                console.log('✅ 找到清空按鈕，正在綁定事件...');
+                clearUserFeedback.addEventListener('click', function(e) {
+                    console.log('🧹 清空按鈕被點擊');
+                    e.preventDefault();
+                    self.clearUserFeedback();
+                });
+                console.log('✅ 清空按鈕事件綁定完成');
+            } else {
+                console.warn('⚠️ 找不到清空按鈕 #clearUserFeedback');
+            }
+
             // 快捷鍵
             document.addEventListener('keydown', function(e) {
                 // Ctrl+Enter 提交回饋
@@ -1436,6 +1450,56 @@
                 }
                 document.body.removeChild(textarea);
             });
+    };
+
+    /**
+     * 清空用戶回饋內容
+     */
+    FeedbackApp.prototype.clearUserFeedback = function() {
+        console.log('🧹 清空用戶回饋內容...');
+
+        const feedbackInput = window.MCPFeedback.Utils.safeQuerySelector('#combinedFeedbackText');
+        if (!feedbackInput) {
+            console.error('❌ 找不到回饋輸入框 #combinedFeedbackText');
+            return;
+        }
+
+        console.log('📝 當前文本框內容:', feedbackInput.value);
+        console.log('📝 文本框內容長度:', feedbackInput.value.length);
+
+        // 檢查是否有內容需要清空
+        if (!feedbackInput.value.trim()) {
+            console.log('ℹ️ 文本框為空，顯示提示訊息');
+            window.MCPFeedback.Utils.showMessage(
+                window.i18nManager ? window.i18nManager.t('feedback.noContentToClear') : '沒有內容需要清空',
+                window.MCPFeedback.Utils.CONSTANTS.MESSAGE_INFO
+            );
+            return;
+        }
+
+        console.log('🗑️ 開始清空文本框內容...');
+
+        // 清空文本框內容
+        feedbackInput.value = '';
+
+        console.log('📝 清空後文本框內容:', feedbackInput.value);
+
+        // 觸發 input 事件以確保其他組件能夠響應變化
+        const inputEvent = new Event('input', { bubbles: true });
+        feedbackInput.dispatchEvent(inputEvent);
+        console.log('📡 已觸發 input 事件');
+
+        // 重新聚焦到文本框
+        feedbackInput.focus();
+        console.log('🎯 已重新聚焦到文本框');
+
+        // 顯示成功訊息
+        window.MCPFeedback.Utils.showMessage(
+            window.i18nManager ? window.i18nManager.t('feedback.clearSuccess') : '文字已清空',
+            window.MCPFeedback.Utils.CONSTANTS.MESSAGE_SUCCESS
+        );
+
+        console.log('✅ 用戶回饋內容已清空');
     };
 
     /**

@@ -51,6 +51,8 @@
         "noContent": "没有可复制的内容",
         "copySuccess": "内容已复制到剪贴板",
         "copyFailed": "复制失败",
+        "noContentToClear": "没有内容需要清空",
+        "clearSuccess": "文字已清空",
         "provideTextOrImage": "请提供反馈文字或上传图片"
     },
     "summary": {
@@ -277,6 +279,7 @@
         },
         "copySessionContent": "复制会话内容",
         "copyUserContent": "复制用户内容",
+        "clearUserContent": "清空文字",
         "exportSession": "导出此会话"
     },
     "sessionHistory": {
