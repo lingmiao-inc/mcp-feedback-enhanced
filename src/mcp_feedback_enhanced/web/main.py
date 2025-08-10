@@ -16,6 +16,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+# 加载.env文件（在其他导入之前）
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print(f"✅ .env文件已加载")
+except ImportError:
+    print("⚠️ python-dotenv未安装，跳过.env文件加载")
+
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.gzip import GZipMiddleware

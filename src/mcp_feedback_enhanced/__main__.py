@@ -16,6 +16,14 @@ import os
 import sys
 import warnings
 
+# 加载.env文件（在其他导入之前）
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print(f"✅ .env文件已加载")
+except ImportError:
+    print("⚠️ python-dotenv未安装，跳过.env文件加载")
+
 
 # 抑制 Windows 上的 asyncio ResourceWarning
 if sys.platform == "win32":

@@ -23,6 +23,14 @@ MCP Feedback Enhanced 伺服器主要模組
 重構: 模塊化設計
 """
 
+# 加载.env文件（在其他导入之前）
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print(f"✅ .env文件已加载")
+except ImportError:
+    print("⚠️ python-dotenv未安装，跳过.env文件加载")
+
 import base64
 import io
 import json
