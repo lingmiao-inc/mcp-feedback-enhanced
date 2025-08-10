@@ -165,11 +165,20 @@ def bump_version(version_type='patch'):
 
     # 检查 bump-my-version 是否可用
     try:
-        result = run_command(['uv', 'run', 'bump-my-version', '--help'], capture_output=True, check=False)
-        if not result:
-            print("❌ 无法运行 bump-my-version，请安装: uv add --dev bump-my-version")
-            return False
-        bump_cmd = ['uv', 'run', 'bump-my-version']
+        # 先尝试直接调用 bump-my-version
+        result = run_command(['bump-my-version', '--help'], capture_output=True, check=False)
+        if result:
+            bump_cmd = ['bump-my-version']
+            print("✅ 使用系统安装的 bump-my-version")
+        else:
+            # 回退到 uv run 方式
+            result = run_command(['uv', 'run', 'bump-my-version', '--help'], capture_output=True, check=False)
+            if result:
+                bump_cmd = ['uv', 'run', 'bump-my-version']
+                print("✅ 使用 uv run bump-my-version")
+            else:
+                print("❌ 无法运行 bump-my-version，请安装: pip install bump-my-version 或 uv add --dev bump-my-version")
+                return False
     except Exception as e:
         print(f"❌ 检查 bump-my-version 时出错: {e}")
         return False
