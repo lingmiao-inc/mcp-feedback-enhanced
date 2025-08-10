@@ -20,8 +20,9 @@
     function ShortcutManager(options) {
         options = options || {};
         
-        // API 設定
-        this.apiUrl = 'https://mcp.lingmiaoai.com/api/shortcuts';
+        // API 設定 - 從環境變量或配置獲取
+        this.apiUrl = this.getApiUrlFromEnvironment();
+        this.apiKey = this.getApiKeyFromEnvironment();
         this.requestTimeout = options.timeout || 10000; // 10秒超時
         
         // 數據狀態
@@ -40,9 +41,112 @@
         this.onLoadSuccessCallbacks = [];
         this.onLoadErrorCallbacks = [];
         this.onDataChangeCallbacks = [];
+        this.onConfigErrorCallbacks = [];
+        
+        // 初始化API配置检查
+        this.configCheckPromise = null;
+        this.isConfigValid = false;
         
         console.log('✅ ShortcutManager 初始化完成');
     }
+
+    /**
+     * 获取API服务器URL从环境变量配置
+     */
+    ShortcutManager.prototype.getApiUrlFromEnvironment = function() {
+        // 默认URL，将由后端配置替代
+        return null;
+    };
+
+    /**
+     * 获取API密钥从环境变量配置  
+     */
+    ShortcutManager.prototype.getApiKeyFromEnvironment = function() {
+        // 将由后端配置提供
+        return null;
+    };
+
+    /**
+     * 从后端获取快捷指令配置
+     */
+    ShortcutManager.prototype.loadConfigFromBackend = function() {
+        const self = this;
+        
+        if (this.configCheckPromise) {
+            return this.configCheckPromise;
+        }
+        
+        this.configCheckPromise = fetch('/api/shortcut-config', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(function(config) {
+            console.log('📡 快捷指令配置加载成功:', config);
+            
+            if (config.configComplete && config.apiServer) {
+                // 构建完整的API URL
+                const baseUrl = config.apiServer.endsWith('/') ? config.apiServer.slice(0, -1) : config.apiServer;
+                self.apiUrl = baseUrl + '/api/shortcuts';
+                self.apiKey = config.apiKey;
+                self.isConfigValid = true;
+                
+                console.log('✅ API配置已设置:', {
+                    url: self.apiUrl,
+                    hasKey: !!self.apiKey
+                });
+            } else {
+                self.isConfigValid = false;
+                const missingItems = [];
+                if (!config.apiServer) missingItems.push('FEEDBACK_API_SERVER');
+                if (!config.apiKey) missingItems.push('FEEDBACK_API_KEY');
+                
+                const error = new Error('环境变量配置不完整，缺少: ' + missingItems.join(', '));
+                error.missingConfig = missingItems;
+                throw error;
+            }
+            
+            return config;
+        })
+        .catch(function(error) {
+            console.error('❌ 快捷指令配置加载失败:', error);
+            self.isConfigValid = false;
+            self.triggerConfigErrorCallbacks(error);
+            throw error;
+        });
+        
+        return this.configCheckPromise;
+    };
+
+    /**
+     * 添加配置错误回调
+     */
+    ShortcutManager.prototype.addConfigErrorCallback = function(callback) {
+        if (typeof callback === 'function') {
+            this.onConfigErrorCallbacks.push(callback);
+        }
+    };
+
+    /**
+     * 触发配置错误回调
+     */
+    ShortcutManager.prototype.triggerConfigErrorCallbacks = function(error) {
+        this.onConfigErrorCallbacks.forEach(function(callback) {
+            try {
+                callback(error);
+            } catch (callbackError) {
+                console.error('❌ 配置错误回调执行失败:', callbackError);
+            }
+        });
+    };
 
     /**
      * 初始化快捷指令管理器
@@ -161,12 +265,12 @@
     };
 
     /**
-     * 從API載入快捷指令數據
+     * 从API載入快捷指令數據
      */
     ShortcutManager.prototype.loadShortcuts = function(forceReload) {
         const self = this;
         
-        // 檢查緩存
+        // 检查缓存
         if (!forceReload && this.isCacheValid() && this.shortcuts.length > 0) {
             console.log('📋 使用緩存的快捷指令數據');
             this.triggerLoadSuccessCallbacks({
@@ -193,33 +297,49 @@
         this.triggerDataChangeCallbacks();
         
         console.log('🔄 開始載入快捷指令數據...');
-        console.log('📡 API URL:', this.apiUrl);
-        console.log('⏱️ 請求超時:', this.requestTimeout + 'ms');
+        
+        // 首先加载配置
+        return this.loadConfigFromBackend()
+        .then(function(config) {
+            if (!self.isConfigValid || !self.apiUrl) {
+                throw new Error('API配置无效');
+            }
+            
+            console.log('📡 使用API URL:', self.apiUrl);
+            console.log('⏱️ 請求超時:', self.requestTimeout + 'ms');
 
-        // 創建帶超時的 fetch 請求
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => {
-            console.log('⏰ 請求超時，中止請求');
-            controller.abort();
-        }, this.requestTimeout);
+            // 创建带超时的 fetch 请求
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => {
+                console.log('⏰ 請求超時，中止請求');
+                controller.abort();
+            }, self.requestTimeout);
 
-        return fetch(this.apiUrl, {
-            method: 'GET',
-            headers: {
+            const headers = {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            },
-            signal: controller.signal
-        })
-        .then(function(response) {
-            clearTimeout(timeoutId);
-            console.log('📥 收到API響應:', response.status, response.statusText);
-
-            if (!response.ok) {
-                throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+            };
+            
+            // 如果有API密钥，添加到请求头
+            if (self.apiKey) {
+                headers['Authorization'] = 'Bearer ' + self.apiKey;
             }
 
-            return response.json();
+            return fetch(self.apiUrl, {
+                method: 'GET',
+                headers: headers,
+                signal: controller.signal
+            })
+            .then(function(response) {
+                clearTimeout(timeoutId);
+                console.log('📥 收到API響應:', response.status, response.statusText);
+
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+                }
+
+                return response.json();
+            })
         })
         .then(function(data) {
             console.log('📥 快捷指令數據載入成功:', data);

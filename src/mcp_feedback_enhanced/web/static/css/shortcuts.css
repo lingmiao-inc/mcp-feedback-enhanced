@@ -192,6 +192,91 @@
     text-align: center;
 }
 
+/* 配置错误样式 */
+.shortcuts-error.config-error {
+    flex-direction: column;
+    text-align: left;
+    gap: 16px;
+    padding: 24px;
+    background: rgba(255, 107, 107, 0.05);
+    border: 1px solid rgba(255, 107, 107, 0.3);
+    border-radius: 8px;
+    margin: 16px;
+}
+
+.config-error .error-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--warning-color);
+}
+
+.config-error .error-icon {
+    font-size: 24px;
+}
+
+.config-error .error-message {
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.config-error .missing-config-list {
+    margin: 12px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.config-error .missing-config-list li {
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.config-error .missing-config-list li:before {
+    content: "•";
+    color: var(--error-color);
+    font-weight: bold;
+}
+
+.config-error .missing-config-list code {
+    background: var(--bg-tertiary);
+    color: var(--accent-color);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.config-error .config-help {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.config-error .config-help p {
+    margin: 8px 0;
+    font-size: 13px;
+}
+
+.config-error .config-help p strong {
+    color: var(--accent-color);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+.config-error .help-note {
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+    color: var(--warning-color);
+    font-style: italic;
+}
+
 /* 空狀態 */
 .shortcuts-empty {
     display: flex;

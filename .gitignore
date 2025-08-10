@@ -87,3 +87,13 @@ yarn.lock
 *.temp
 
 .specstory/
+
+# 灵妙插件相关文件忽略规则
+**/.DS_Store
+.augment/
+.claude/backups/
+.claude/ide/
+.claude/statsig/
+.claude/projects/
+.claude/shell-snapshots/
+.claude/todos/

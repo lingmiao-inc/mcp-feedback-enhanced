@@ -687,7 +687,15 @@
 
             this.shortcutManager.addLoadErrorCallback(function(error) {
                 console.error('⚡ 快捷指令載入失敗:', error);
-                self.shortcutUI.showError(error.message || '載入失敗');
+                // 传递完整的错误对象，包含配置错误信息
+                self.shortcutUI.showError(error);
+            });
+
+            // 添加配置错误回调
+            this.shortcutManager.addConfigErrorCallback(function(error) {
+                console.error('⚡ 快捷指令配置错误:', error);
+                // 显示配置错误
+                self.shortcutUI.showError(error);
             });
 
             // 4. 開始加載快捷指令數據
