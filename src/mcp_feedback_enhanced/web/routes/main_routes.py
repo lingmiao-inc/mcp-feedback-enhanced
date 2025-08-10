@@ -33,16 +33,16 @@ def load_user_layout_settings() -> str:
         if settings_file.exists():
             with open(settings_file, encoding="utf-8") as f:
                 settings = json.load(f)
-                layout_mode = settings.get("layoutMode", "combined-vertical")
+                layout_mode = settings.get("layoutMode", "combined-horizontal")
                 debug_log(f"從設定檔案載入佈局模式: {layout_mode}")
                 # 修復 no-any-return 錯誤 - 確保返回 str 類型
                 return str(layout_mode)
         else:
-            debug_log("設定檔案不存在，使用預設佈局模式: combined-vertical")
-            return "combined-vertical"
+            debug_log("設定檔案不存在，使用預設佈局模式: combined-horizontal")
+            return "combined-horizontal"
     except Exception as e:
-        debug_log(f"載入佈局設定失敗: {e}，使用預設佈局模式: combined-vertical")
-        return "combined-vertical"
+        debug_log(f"載入佈局設定失敗: {e}，使用預設佈局模式: combined-horizontal")
+        return "combined-horizontal"
 
 
 # 使用統一的訊息代碼系統
@@ -611,6 +611,40 @@ def setup_routes(manager: "WebUIManager"):
                     "status": "error",
                     "message": f"Set failed: {e!s}",
                     "messageCode": get_msg_code("set_failed"),
+                },
+            )
+
+    @manager.app.get("/api/shortcut-config")
+    async def get_shortcut_config():
+        """获取快捷指令API配置"""
+        import os
+        
+        try:
+            # 从环境变量获取配置
+            api_server = os.getenv("FEEDBACK_API_SERVER")
+            api_key = os.getenv("FEEDBACK_API_KEY")
+            
+            # 检查配置是否完整
+            config_complete = bool(api_server and api_key)
+            
+            debug_log(f"快捷指令配置状态 - API服务器: {'已配置' if api_server else '未配置'}, API密钥: {'已配置' if api_key else '未配置'}")
+            
+            return JSONResponse(
+                content={
+                    "apiServer": api_server,
+                    "apiKey": api_key,
+                    "configComplete": config_complete,
+                    "messageCode": get_msg_code("shortcut_config_loaded") if config_complete else get_msg_code("shortcut_config_incomplete"),
+                }
+            )
+            
+        except Exception as e:
+            debug_log(f"获取快捷指令配置失败: {e}")
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "error": f"Failed to get shortcut config: {e!s}",
+                    "messageCode": get_msg_code("get_shortcut_config_failed"),
                 },
             )
 

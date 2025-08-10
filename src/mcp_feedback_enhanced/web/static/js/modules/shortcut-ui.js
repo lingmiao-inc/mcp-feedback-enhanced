@@ -127,13 +127,46 @@
      */
     ShortcutUI.prototype.showError = function(error) {
         const errorText = window.i18nManager ? window.i18nManager.t('shortcuts.loadError') : '快捷指令載入失敗';
+        
         this.tabsContainer.innerHTML = '';
-        this.panelsContainer.innerHTML = `
-            <div class="shortcuts-error">
-                <span>❌</span>
-                <span>${errorText}: ${error}</span>
-            </div>
-        `;
+        
+        // 检查是否是配置错误
+        if (error && error.missingConfig && Array.isArray(error.missingConfig)) {
+            // 环境变量配置缺失错误
+            const missingVars = error.missingConfig;
+            const configErrorText = window.i18nManager ? window.i18nManager.t('shortcuts.configError') : '配置错误';
+            const missingConfigText = window.i18nManager ? window.i18nManager.t('shortcuts.missingConfig') : '缺少环境变量配置';
+            const instructionText = window.i18nManager ? window.i18nManager.t('shortcuts.configInstruction') : '请设置以下环境变量';
+            
+            this.panelsContainer.innerHTML = `
+                <div class="shortcuts-error config-error">
+                    <div class="error-header">
+                        <span class="error-icon">⚙️</span>
+                        <span class="error-title">${configErrorText}</span>
+                    </div>
+                    <div class="error-message">
+                        <p>${missingConfigText}</p>
+                        <p><strong>${instructionText}:</strong></p>
+                        <ul class="missing-config-list">
+                            ${missingVars.map(varName => `<li><code>${varName}</code></li>`).join('')}
+                        </ul>
+                        <div class="config-help">
+                            <p><strong>FEEDBACK_API_SERVER</strong>: 快捷指令API服务器地址</p>
+                            <p><strong>FEEDBACK_API_KEY</strong>: 快捷指令API访问密钥</p>
+                            <p class="help-note">⚠️ 请联系管理员获取正确的配置值</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // 一般错误
+            this.panelsContainer.innerHTML = `
+                <div class="shortcuts-error">
+                    <span>❌</span>
+                    <span>${errorText}: ${error}</span>
+                </div>
+            `;
+        }
     };
 
     /**
