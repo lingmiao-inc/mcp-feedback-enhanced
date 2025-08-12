@@ -32,10 +32,12 @@ except ImportError:
     print("⚠️ python-dotenv未安装，跳过.env文件加载")
 
 import base64
+import getpass
 import io
 import json
 import os
 import sys
+from datetime import datetime
 from typing import Annotated, Any
 
 from fastmcp import FastMCP
@@ -578,7 +580,22 @@ def get_system_info() -> str:
     is_remote = is_remote_environment()
     is_wsl = is_wsl_environment()
 
+    # 獲取用戶名
+    try:
+        username = getpass.getuser()
+    except Exception:
+        username = os.getenv("USER") or os.getenv("USERNAME") or "unknown"
+
+    # 獲取當前時間
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # 獲取當前項目目錄
+    current_project_dir = os.getcwd()
+
     system_info = {
+        "用戶名": username,
+        "當前時間": current_time,
+        "當前項目目錄": current_project_dir,
         "平台": sys.platform,
         "Python 版本": sys.version.split()[0],
         "WSL 環境": is_wsl,

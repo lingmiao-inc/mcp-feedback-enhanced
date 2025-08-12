@@ -1,3 +1,34 @@
 {
-  "mcpServers": {}
-}
+	"mcpServers": {
+        "灵妙工具箱": {
+          "type": "sse",
+          "url": "https://ydy.mcp.lingmiaoai.com/sse"
+        },
+        "交互式反馈": {
+          "type": "stdio",
+          "command": "mcp-feedback-enhanced",
+          "env": {},
+          "args": []
+        },
+        "Playwright": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@playwright/mcp@latest"
+          ]
+        },
+        "code-search": {
+          "type": "stdio",
+          "command": "serena",
+          "args": [
+            "start-mcp-server",
+            "--context",
+            "ide-assistant",
+            "--project",
+            ".",
+            "--enable-web-dashboard",
+            "true"
+          ]
+        }
+      }
+  }
