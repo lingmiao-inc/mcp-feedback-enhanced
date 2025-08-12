@@ -7,6 +7,7 @@
 """
 
 import json
+import os
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -75,13 +76,16 @@ def setup_routes(manager: "WebUIManager"):
         # 載入用戶的佈局模式設定
         layout_mode = load_user_layout_settings()
 
+        # 获取项目名称作为页面标题
+        project_name = os.path.basename(current_session.project_directory) or "未知项目"
+
         return manager.templates.TemplateResponse(
             "feedback.html",
             {
                 "request": request,
                 "project_directory": current_session.project_directory,
                 "summary": current_session.summary,
-                "title": "Interactive Feedback - 回饋收集",
+                "title": project_name,  # 直接使用项目名称，不加前缀
                 "version": __version__,
                 "has_session": True,
                 "layout_mode": layout_mode,

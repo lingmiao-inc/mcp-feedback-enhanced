@@ -429,6 +429,17 @@
                   title="點擊複製完整會話ID">{{ session_id[:6] if session_id else '--' }}</span>
         </div>
 
+        <!-- 分隔符 -->
+        <span class="info-separator">·</span>
+
+        <!-- 項目路徑 -->
+        <div class="project-info-compact">
+            <span>📁</span>
+            <span id="currentProjectPath" class="project-path-display"
+                  data-full-path="{{ project_directory }}"
+                  title="當前項目路徑: {{ project_directory }}">{{ project_directory }}</span>
+        </div>
+
         <!-- 倒數計時器（條件顯示） -->
         <div id="countdownDisplay" class="countdown-display-compact auto-submit-display" style="display: none;">
             <span class="info-separator">·</span>
@@ -612,7 +623,14 @@
                     <!-- 回饋輸入區域 -->
                     <div class="combined-section">
                         <div class="feedback-title-container">
-                            <h3 class="combined-section-title" data-i18n="shortcuts.title">💬 快捷指令</h3>
+                            <div class="shortcuts-title-group">
+                                <h3 class="combined-section-title" data-i18n="shortcuts.title">💬 快捷指令</h3>
+                                <button id="shortcutsToggleBtn" class="shortcuts-toggle-btn"
+                                        title="收起/展開快捷指令面板"
+                                        aria-label="收起/展開快捷指令面板">
+                                    <span class="toggle-icon">▼</span>
+                                </button>
+                            </div>
                             <button id="submitBtn" class="btn btn-success combined-submit-btn" data-i18n="buttons.submit">
                                 ✅ 提交回饋
                             </button>

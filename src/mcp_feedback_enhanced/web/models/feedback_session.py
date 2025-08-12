@@ -567,6 +567,26 @@ class WebFeedbackSession:
                         debug_log("桌面應用程式立即關閉成功")
                     except Exception as close_error:
                         debug_log(f"立即關閉桌面應用程式失敗: {close_error}")
+                else:
+                    # WEB模式：檢查是否需要自動關閉頁面
+                    auto_close_web = os.environ.get("MCP_WEB_AUTO_CLOSE", "true").lower() == "true"
+                    if auto_close_web:
+                        debug_log("WEB模式：反饋提交後自動關閉頁面")
+
+                        # 發送關閉頁面的指令給前端
+                        try:
+                            await self.websocket.send_json(
+                                {
+                                    "type": "web_close_request",
+                                    "message": "反饋已提交，正在關閉頁面...",
+                                    "delay": 2000  # 2秒後關閉
+                                }
+                            )
+                            debug_log("WEB頁面關閉指令已發送")
+                        except Exception as close_error:
+                            debug_log(f"發送WEB頁面關閉指令失敗: {close_error}")
+                    else:
+                        debug_log("WEB模式：已禁用自動關閉頁面功能")
 
             except Exception as e:
                 debug_log(f"發送反饋確認失敗: {e}")
