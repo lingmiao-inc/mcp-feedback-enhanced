@@ -264,6 +264,7 @@
 
                         // 16. 初始化各個管理器
                         self.uiManager.initTabs();
+                        self.uiManager.initShortcutsToggle();
                         self.imageHandler.init();
 
                         // 17. 檢查並啟動自動提交（如果條件滿足）
@@ -810,6 +811,10 @@
                 console.log('🖥️ 收到桌面關閉請求');
                 this.handleDesktopCloseRequest(data);
                 break;
+            case 'web_close_request':
+                console.log('🌐 收到WEB頁面關閉請求');
+                this.handleWebCloseRequest(data);
+                break;
             case 'notification':
                 console.log('📢 收到通知:', data);
                 // 處理 FEEDBACK_SUBMITTED 通知
@@ -925,6 +930,59 @@
             // 在瀏覽器環境中嘗試關閉視窗
             window.close();
         }
+    };
+
+    /**
+     * 處理WEB頁面關閉請求
+     */
+    FeedbackApp.prototype.handleWebCloseRequest = function(data) {
+        console.log('🌐 處理WEB頁面關閉請求:', data.message);
+
+        // 顯示關閉訊息
+        const closeMessage = data.message || '反饋已提交，正在關閉頁面...';
+        window.MCPFeedback.Utils.showMessage(closeMessage, window.MCPFeedback.Utils.CONSTANTS.MESSAGE_SUCCESS);
+
+        // 設置延遲關閉
+        const delay = data.delay || 2000; // 默認2秒延遲
+
+        setTimeout(function() {
+            console.log('🌐 執行WEB頁面關閉');
+
+            // 嘗試關閉當前標籤頁/視窗
+            try {
+                window.close();
+            } catch (error) {
+                console.log('🌐 無法直接關閉頁面，嘗試其他方式');
+
+                // 如果無法關閉，則跳轉到空白頁面或顯示完成訊息
+                try {
+                    window.location.href = 'about:blank';
+                } catch (redirectError) {
+                    // 最後的備用方案：顯示完成訊息並隱藏內容
+                    document.body.innerHTML = `
+                        <div style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            min-height: 100vh;
+                            background: var(--bg-primary, #1e1e1e);
+                            color: var(--text-primary, #cccccc);
+                            font-family: 'Segoe UI', sans-serif;
+                            text-align: center;
+                        ">
+                            <div>
+                                <h2 style="color: var(--success-color, #4caf50); margin-bottom: 16px;">
+                                    ✅ 反饋提交成功
+                                </h2>
+                                <p style="color: var(--text-secondary, #9e9e9e);">
+                                    您可以安全地關閉此頁面
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }, delay);
     };
 
     /**
@@ -1099,7 +1157,7 @@
             // 更新頁面標題
             if (data.session_info.project_directory) {
                 const projectName = data.session_info.project_directory.split(/[/\\]/).pop();
-                document.title = 'MCP Feedback - ' + projectName;
+                document.title = projectName;
             }
 
             // 使用局部更新替代整頁刷新
@@ -1147,7 +1205,7 @@
         // 更新頁面標題顯示會話信息
         if (statusInfo.project_directory) {
             const projectName = statusInfo.project_directory.split(/[/\\]/).pop();
-            document.title = 'MCP Feedback - ' + projectName;
+            document.title = projectName;
         }
 
         // 使用之前已聲明的 sessionId
@@ -1880,7 +1938,7 @@
                 // 更新頁面標題
                 if (sessionData.project_directory) {
                     const projectName = sessionData.project_directory.split(/[/\\]/).pop();
-                    document.title = 'MCP Feedback - ' + projectName;
+                    document.title = projectName;
                 }
 
                 console.log('✅ 局部更新完成');

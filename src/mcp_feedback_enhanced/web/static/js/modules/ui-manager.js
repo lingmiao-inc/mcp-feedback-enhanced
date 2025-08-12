@@ -588,6 +588,83 @@
         this.updateStatusIndicator();
     };
 
+    /**
+     * 初始化快捷指令面板控制
+     */
+    UIManager.prototype.initShortcutsToggle = function() {
+        const toggleBtn = Utils.safeQuerySelector('#shortcutsToggleBtn');
+        const shortcutsContainer = Utils.safeQuerySelector('#shortcutsContainer');
+
+        if (!toggleBtn || !shortcutsContainer) {
+            console.log('快捷指令面板控制元素未找到，跳過初始化');
+            return;
+        }
+
+        // 从本地存储恢复状态
+        const isCollapsed = localStorage.getItem('shortcuts-collapsed') === 'true';
+        if (isCollapsed) {
+            this.collapseShortcuts(toggleBtn, shortcutsContainer, false);
+        }
+
+        // 添加点击事件
+        const self = this;
+        toggleBtn.addEventListener('click', function() {
+            self.toggleShortcuts();
+        });
+
+        console.log('✅ 快捷指令面板控制初始化完成');
+    };
+
+    /**
+     * 切换快捷指令面板显示状态
+     */
+    UIManager.prototype.toggleShortcuts = function() {
+        const toggleBtn = Utils.safeQuerySelector('#shortcutsToggleBtn');
+        const shortcutsContainer = Utils.safeQuerySelector('#shortcutsContainer');
+
+        if (!toggleBtn || !shortcutsContainer) {
+            return;
+        }
+
+        const isCollapsed = shortcutsContainer.classList.contains('collapsed');
+
+        if (isCollapsed) {
+            this.expandShortcuts(toggleBtn, shortcutsContainer);
+        } else {
+            this.collapseShortcuts(toggleBtn, shortcutsContainer);
+        }
+    };
+
+    /**
+     * 收起快捷指令面板
+     */
+    UIManager.prototype.collapseShortcuts = function(toggleBtn, shortcutsContainer, saveState) {
+        if (saveState !== false) {
+            localStorage.setItem('shortcuts-collapsed', 'true');
+        }
+
+        shortcutsContainer.classList.add('collapsed');
+        toggleBtn.classList.add('collapsed');
+        toggleBtn.title = '展開快捷指令面板';
+        toggleBtn.setAttribute('aria-label', '展開快捷指令面板');
+
+        console.log('📦 快捷指令面板已收起');
+    };
+
+    /**
+     * 展开快捷指令面板
+     */
+    UIManager.prototype.expandShortcuts = function(toggleBtn, shortcutsContainer) {
+        localStorage.setItem('shortcuts-collapsed', 'false');
+
+        shortcutsContainer.classList.remove('collapsed');
+        toggleBtn.classList.remove('collapsed');
+        toggleBtn.title = '收起快捷指令面板';
+        toggleBtn.setAttribute('aria-label', '收起快捷指令面板');
+
+        console.log('📋 快捷指令面板已展開');
+    };
+
     // 將 UIManager 加入命名空間
     window.MCPFeedback.UIManager = UIManager;
 

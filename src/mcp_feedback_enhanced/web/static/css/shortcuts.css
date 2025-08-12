@@ -13,6 +13,51 @@
     border-radius: 8px;
     margin-bottom: 16px;
     overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.shortcuts-container.collapsed {
+    display: none;
+}
+
+/* 快捷指令标题组 */
+.shortcuts-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 收起/展开按钮 */
+.shortcuts-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 12px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+}
+
+.shortcuts-toggle-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--accent-color);
+}
+
+.shortcuts-toggle-btn .toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 10px;
+    line-height: 1;
+}
+
+.shortcuts-toggle-btn.collapsed .toggle-icon {
+    transform: rotate(-90deg);
 }
 
 /* ===== 快捷指令標籤頁 ===== */
